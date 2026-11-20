@@ -1,0 +1,106 @@
+================================================================================
+ESTADO DEL PROYECTO: PausasActivasApp
+DOCUMENTO DE TRANSFERENCIA PARA OTRO AGENTE DE IA / DESARROLLADOR
+================================================================================
+Fecha de actualización : 20/11/2026
+Estado general         : FASES 0 A 7 COMPLETADAS AL 100% — COMPILACIÓN LIMPIA (0 ERRORES)
+Framework / Runtime    : .NET 8.0 Windows Forms (Microsoft.NET.Sdk, SDK-Style)
+Lenguaje               : C# 12
+Base de Datos          : Microsoft SQL Server (PausasActivasDB)
+Conexión actual        : Server=localhost;Database=PausasActivasDB;Integrated Security=True;TrustServerCertificate=True;
+Librerías principales  : Microsoft.Data.SqlClient (v5.2.2), System.Configuration.ConfigurationManager (v8.0.0)
+
+--------------------------------------------------------------------------------
+1. RESUMEN DE FASES COMPLETADAS
+--------------------------------------------------------------------------------
+[X] FASE 0 - Definición de Arquitectura y Decisiones Técnicas.
+[X] FASE 1 - Base de Datos (Database/schema_y_semilla.sql ejecutado y probado).
+[X] FASE 2 - Infraestructura Base, Autenticación y FrmLogin.
+[X] FASE 3 - Panel Admin Principal (FrmAdminPrincipal) y CRUD Ejercicios (UcEjercicios, FrmEjercicioDetalle con preview de GIFs/imágenes).
+[X] FASE 4 - Configuración de Pausas y Ordenamiento de Rutinas (UcConfigPausas, PausaDAL transaccional).
+[X] FASE 5 - Gestión de Usuarios y Empleados (UcUsuarios, FrmUsuarioDetalle, FrmRestablecerPassword, protección de auto-bloqueo).
+[X] FASE 6 - Motor del Empleado (FrmEmpleadoBandeja en System Tray, temporizadores, FrmPausaActiva TopMost interactiva y registro en historial).
+[X] FASE 7 - Reportes, Dashboard de Métricas y Exportación CSV (UcReportes, HistorialDAL con filtros multicriterio).
+
+--------------------------------------------------------------------------------
+2. ESTRUCTURA DE ARCHIVOS Y RESPONSABILIDADES
+--------------------------------------------------------------------------------
+- PausasActivasApp/
+  * App.config               : Cadena de conexión centralizada bajo el nombre "PausasActivasDB".
+  * Program.cs               : Main STAThread -> Application.Run(new FrmLogin()).
+  * PausasActivasApp.csproj  : Configuración SDK-Style con declaración explícita de Forms, UserControls y sus .resx.
+
+- Database/
+  * schema_y_semilla.sql     : Script SQL idempotente con 5 tablas (usuarios, ejercicios, configuracion_pausas, rutina_ejercicios, historial_pausas), índices y datos semilla.
+
+- Modelos/ (POCOs)
+  * Usuario.cs               : Mapea dbo.usuarios. Contiene formateadores EstadoTexto y FechaCreacionTexto.
+  * Ejercicio.cs             : Mapea dbo.ejercicios. DuracionTexto, EstadoTexto, ImagenRuta.
+  * ConfiguracionPausa.cs    : Mapea dbo.configuracion_pausas (horarios, intervalos, posponer).
+  * RutinaEjercicio.cs       : Mapea dbo.rutina_ejercicios con JOIN a ejercicios (incluye Titulo, Descripcion, ImagenRuta, Duracion).
+  * HistorialPausa.cs        : Mapea dbo.historial_pausas con campos auxiliares para reportes (EstadoFormateado, DuracionTexto).
+
+- Datos/ (DAL - ADO.NET Parametrizado)
+  * Conexion.cs              : Factoría estática SqlConnection. Método VerificarConexion() para diagnóstico temprano.
+  * UsuarioDAL.cs            : Autenticar(), ObtenerTodos(), ExisteUsuario(), Insertar(), Actualizar(), RestablecerPassword(), CambiarEstado().
+  * EjercicioDAL.cs          : ObtenerTodos(), ObtenerActivos(), Insertar(), Actualizar(), Eliminar(), CambiarEstado().
+  * PausaDAL.cs              : ObtenerTodas(), ObtenerActiva(), Insertar(), Actualizar(), Activar(), Eliminar(), ObtenerRutina(), GuardarRutina() [Transaccional].
+  * HistorialDAL.cs          : Registrar() e Historial filtrado ObtenerHistorial(desde, hasta, idUsuario, estado).
+
+- Utilidades/
+  * Seguridad.cs             : HashSHA256() -> Devuelve hexadecimal en mayúsculas de 64 caracteres. Compatible con SQL Server HASHBYTES('SHA2_256', ...).
+  * SesionActual.cs          : Singleton estático que almacena IdUsuario, Nombre, Usuario, Rol ("ADMIN" | "EMPLEADO") y Estado.
+
+- Formularios/
+  * FrmLogin.cs / .Designer / .resx : Ventana de acceso. Valida credenciales y estado activo; redirige a Admin o Empleado.
+
+  * Admin/
+    - FrmAdminPrincipal.cs   : Sidebar oscuro (Ejercicios, Config. Pausas, Empleados, Reportes, Cerrar Sesión). Carga UserControls dinámicamente.
+    - UcEjercicios.cs        : DataGridView con catálogo de ejercicios y botones de acción.
+    - FrmEjercicioDetalle.cs : Modal de creación/edición de ejercicio. Copia automáticamente imágenes a Recursos/Imagenes/ y soporta preview de GIFs.
+    - UcConfigPausas.cs      : Panel de parámetros (intervalo, horas, posponer) + dos listas con ordenamiento interactivo (Subir, Bajar, Agregar, Quitar).
+    - UcUsuarios.cs          : DataGridView con cuentas de usuario, botones para crear, editar, restablecer contraseña y toggle activo.
+    - FrmUsuarioDetalle.cs   : Modal de creación/edición de usuario.
+    - FrmRestablecerPassword.cs: Modal para reasignar contraseñas con hash SHA-256.
+    - UcReportes.cs          : Dashboard con filtros combinados, 5 tarjetas de métricas calculadas en tiempo real y exportador nativo a CSV (UTF-8 con BOM).
+
+  * Empleado/
+    - FrmEmpleadoBandeja.cs  : Formulario oculto que vive en el System Tray (NotifyIcon). Timer de conteo regresivo segundo a segundo, validación de horario laboral, timer de sincronización con BD cada 60s, menú contextual.
+    - FrmPausaActiva.cs      : Ventana emergente modal TopMost. Cuenta regresiva con barra de progreso, avance secuencial automático entre ejercicios de la rutina, soporte de GIFs animados, botón de posponer y registro automático en historial_pausas.
+
+--------------------------------------------------------------------------------
+3. CONVENCIONES TÉCNICAS CRÍTICAS (NO ROMPER)
+--------------------------------------------------------------------------------
+1. COMPATIBILIDAD CON DISEÑADOR DE WINFORMS (.NET 8):
+   - Cada Form y UserControl DEBE tener tres archivos correspondientes: *.cs, *.Designer.cs y *.resx.
+   - En PausasActivasApp.csproj, cada formulario debe estar registrado con:
+     <Compile Update="...cs"><SubType>Form o UserControl</SubType></Compile>
+     <Compile Update="...Designer.cs"><DependentUpon>...cs</DependentUpon></Compile>
+     <EmbeddedResource Update="...resx"><DependentUpon>...cs</DependentUpon></EmbeddedResource>
+   - Si se omite el *.resx, el compilador lanzará NETSDK1004.
+
+2. PREVENCIÓN DE BUCLES EN CIERRE DE SESIÓN:
+   - Al cerrar sesión o cerrar una ventana contenedora, existe una bandera `_cerrando` booleana.
+   - No invoques `this.Close()` dentro del evento `FormClosing` sin verificar `if (!_cerrando)` para evitar System.StackOverflowException.
+
+3. ARCHIVO .EXE BLOQUEADO AL COMPILAR:
+   - Si ejecutas la app y luego compilas con `dotnet build`, Windows bloqueará el binario (`MSB3026 / MSB3021`).
+   - Siempre detén el proceso previo con: `Stop-Process -Name "PausasActivasApp" -Force -ErrorAction SilentlyContinue`.
+
+4. EJECUCIÓN FUERA DEL SANDBOX:
+   - Los comandos de build en entornos controlados requieren `BypassSandbox: true` para que el compilador de MSBuild pueda consultar el registro de Windows para el SDK de .NET 8.
+
+--------------------------------------------------------------------------------
+4. CREDENCIALES DE PRUEBA EN BASE DE DATOS
+--------------------------------------------------------------------------------
+Rol ADMIN    : Usuario = admin_pa   | Password en claro = admin123
+Rol EMPLEADO : Usuario = jperez     | Password en claro = empleado1
+
+--------------------------------------------------------------------------------
+5. POSIBLES MEJORAS O TRABAJO FUTURO (SI EL USUARIO LO SOLICITA)
+--------------------------------------------------------------------------------
+- Empaquetado / Instalador (MSI, Inno Setup o ClickOnce).
+- Registro en el inicio automático de Windows (`HKCU\Software\Microsoft\Windows\CurrentVersion\Run`) para el módulo de empleados.
+- Reproducción de efectos de sonido opcionales al iniciar/terminar un ejercicio.
+- Notificaciones Toast avanzadas de Windows 10/11 en lugar de BalloonTips estándar.
+================================================================================
