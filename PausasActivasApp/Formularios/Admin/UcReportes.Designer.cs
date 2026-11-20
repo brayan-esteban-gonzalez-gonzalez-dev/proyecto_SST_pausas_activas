@@ -215,6 +215,9 @@ namespace PausasActivasApp.Formularios.Admin
                     lblVal.Size      = new System.Drawing.Size(160, 26);
                     lblVal.Text      = "0";
                     lblVal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
+                    pnl.Controls.Add(lblTit);
+                    pnl.Controls.Add(lblVal);
                 };
 
             cfgCard(this.pnlCardTotal,        this.lblTituloCardTotal,  this.lblMetricaTotal,        "TOTAL PAUSAS",     System.Drawing.Color.FromArgb(45, 45, 68),  10);
