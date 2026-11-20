@@ -1,0 +1,159 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>PausasActivasApp</AssemblyName>
+    <RootNamespace>PausasActivasApp</RootNamespace>
+    <ApplicationIcon></ApplicationIcon>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
+
+  <!-- ══════════════════════════════════════════════════════
+       Paquete NuGet: Microsoft.Data.SqlClient (ADO.NET moderno
+       compatible con .NET 8). Solo este paquete; sin ORM.
+       ══════════════════════════════════════════════════════ -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- ══════════════════════════════════════════════════════
+       App.config: se copia al directorio de salida.
+       ══════════════════════════════════════════════════════ -->
+  <ItemGroup>
+    <None Update="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- ══════════════════════════════════════════════════════
+       Recursos de imágenes: se copian al directorio de salida
+       manteniendo la estructura de carpetas.
+       ══════════════════════════════════════════════════════ -->
+  <ItemGroup>
+    <Content Include="Recursos\Imagenes\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- ══════════════════════════════════════════════════════
+       Formularios WinForms: declaración explícita para que
+       el SDK encuentre los .resx y los .Designer.cs
+       ══════════════════════════════════════════════════════ -->
+  <ItemGroup>
+    <Compile Update="Formularios\FrmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios\FrmLogin.Designer.cs">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\FrmLogin.resx">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Admin\FrmAdminPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios\Admin\FrmAdminPrincipal.Designer.cs">
+      <DependentUpon>FrmAdminPrincipal.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Admin\FrmAdminPrincipal.resx">
+      <DependentUpon>FrmAdminPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Admin\UcEjercicios.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Formularios\Admin\UcEjercicios.Designer.cs">
+      <DependentUpon>UcEjercicios.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Admin\UcEjercicios.resx">
+      <DependentUpon>UcEjercicios.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Admin\FrmEjercicioDetalle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios\Admin\FrmEjercicioDetalle.Designer.cs">
+      <DependentUpon>FrmEjercicioDetalle.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Admin\FrmEjercicioDetalle.resx">
+      <DependentUpon>FrmEjercicioDetalle.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Admin\UcConfigPausas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Formularios\Admin\UcConfigPausas.Designer.cs">
+      <DependentUpon>UcConfigPausas.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Admin\UcConfigPausas.resx">
+      <DependentUpon>UcConfigPausas.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Admin\UcUsuarios.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Formularios\Admin\UcUsuarios.Designer.cs">
+      <DependentUpon>UcUsuarios.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Admin\UcUsuarios.resx">
+      <DependentUpon>UcUsuarios.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Admin\FrmUsuarioDetalle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios\Admin\FrmUsuarioDetalle.Designer.cs">
+      <DependentUpon>FrmUsuarioDetalle.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Admin\FrmUsuarioDetalle.resx">
+      <DependentUpon>FrmUsuarioDetalle.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Admin\FrmRestablecerPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios\Admin\FrmRestablecerPassword.Designer.cs">
+      <DependentUpon>FrmRestablecerPassword.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Admin\FrmRestablecerPassword.resx">
+      <DependentUpon>FrmRestablecerPassword.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Admin\UcReportes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Formularios\Admin\UcReportes.Designer.cs">
+      <DependentUpon>UcReportes.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Admin\UcReportes.resx">
+      <DependentUpon>UcReportes.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Empleado\FrmPausaActiva.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios\Empleado\FrmPausaActiva.Designer.cs">
+      <DependentUpon>FrmPausaActiva.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Empleado\FrmPausaActiva.resx">
+      <DependentUpon>FrmPausaActiva.cs</DependentUpon>
+    </EmbeddedResource>
+
+    <Compile Update="Formularios\Empleado\FrmEmpleadoBandeja.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios\Empleado\FrmEmpleadoBandeja.Designer.cs">
+      <DependentUpon>FrmEmpleadoBandeja.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios\Empleado\FrmEmpleadoBandeja.resx">
+      <DependentUpon>FrmEmpleadoBandeja.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
