@@ -1,0 +1,17 @@
+## .gitignore para proyecto .NET 8 WinForms
+
+# Carpetas de compilación
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+.vscode/
+
+# Logs y temporizadores
+*.log
+*.tmp
