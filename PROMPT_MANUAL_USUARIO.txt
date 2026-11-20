@@ -1,0 +1,105 @@
+================================================================================
+PROMPT MAESTRO PARA GENERAR EL MANUAL DE USUARIO CON GEMINI
+================================================================================
+INSTRUCCIONES DE USO:
+1. Abre Gemini (https://gemini.google.com).
+2. Copia todo el texto que está debajo de la línea divisoria.
+3. Pégalo en Gemini y presiona Enviar.
+4. Gemini redactará un manual de usuario profesional, exhaustivo y listo para
+   exportar a Word o PDF.
+================================================================================
+
+--- COPIAR A PARTIR DE AQUÍ ---
+
+Actúa como un Redactor Técnico Senior (Technical Writer) y Especialista en Experiencia de Usuario (UX) con más de 10 años de experiencia documentando software corporativo. 
+
+Tu objetivo es redactar un **Manual de Usuario Oficial, Integral y Profesional** para la aplicación de escritorio **PausasActivasApp**. El manual debe estar dirigido tanto a usuarios finales (**Empleados**) como a los gestores de Recursos Humanos, Seguridad y Salud en el Trabajo (SST) y tecnología (**Administradores**).
+
+---
+
+### CONTEXTO TÉCNICO Y FUNCIONAL DEL SISTEMA
+
+* **Nombre de la Aplicación:** PausasActivasApp
+* **Plataforma:** Aplicación de escritorio Windows (.NET 8 - Windows Forms).
+* **Base de Datos:** Microsoft SQL Server.
+* **Propósito:** Promover la salud y prevenir trastornos músculo-esqueléticos en colaboradores mediante la gestión, programación y ejecución guiada de pausas activas durante la jornada laboral.
+
+#### Roles y Módulos del Sistema:
+1. **Acceso Único (Login):**
+   - Validación de credenciales seguras (hasheadas en SHA-256).
+   - Detección de cuentas inactivas (bloquea el acceso a usuarios desactivados con aviso de contacto a soporte).
+   - Redirección automática según el rol asignado (`ADMIN` o `EMPLEADO`).
+
+2. **Módulo Administrador (`ADMIN`):**
+   - **Panel Principal:** Ventana maestra con navegación lateral (sidebar oscuro) que carga submódulos sin ventanas flotantes desordenadas.
+   - **Gestión de Ejercicios (CRUD):** Creación, edición, activación/desactivación y eliminación de ejercicios. Cada ejercicio incluye: Título, Descripción/Instrucciones paso a paso, Duración en segundos y Recurso visual (Imagen o GIF animado demostrativo).
+   - **Configuración de Pausas y Rutinas:**
+     * Definición de parámetros: Intervalo de pausa en minutos, Jornada laboral activa (`Hora Inicio` y `Hora Fin`) y Opción de permitir posponer (con sus minutos correspondientes).
+     * Soporte de múltiples configuraciones con activación única.
+     * Diseñador de rutina: asignación de ejercicios desde la lista de disponibles hacia la rutina activa, con control de orden secuencial (Subir, Bajar, Agregar, Quitar) y cálculo en tiempo real de la duración total.
+   - **Gestión de Empleados:** Creación de colaboradores, edición de datos, validación de nombres de usuario únicos, restricción de seguridad que impide al Administrador desactivar su propia cuenta en uso, y diálogo dedicado para restablecer contraseñas.
+   - **Reportes y Auditoría:**
+     * Filtros combinados por rango de fechas (Desde/Hasta), empleado y estado.
+     * Tarjetas con indicadores clave de rendimiento (KPIs): Total de pausas, % Completadas, % Pospuestas, % Omitidas y Tiempo total de salud invertido en minutos/segundos.
+     * Tabla detallada de auditoría y botón de exportación directa a formato CSV delimitado por comas compatible con Microsoft Excel (UTF-8).
+
+3. **Módulo Empleado (`EMPLEADO`):**
+   - **Ejecución Silenciosa:** Al iniciar sesión, la app se oculta de la barra de tareas y se ubica exclusivamente en la bandeja del sistema (`NotifyIcon` junto al reloj de Windows).
+   - **Menú Contextual del Ícono:** Muestra el tiempo restante en vivo para la próxima pausa, opción para "Iniciar pausa activa ahora", datos de la sesión activa, opción "Cerrar sesión" y "Salir".
+   - **Sincronización Inteligente en Segundo Plano:** Consulta automáticamente cada 60 segundos la base de datos para adoptar cambios de configuración del Administrador sin requerir reinicio de la aplicación.
+   - **Ventana Emergente de Pausa Activa (`FrmPausaActiva`):**
+     * Se muestra en primer plano sobre cualquier ventana abierta (`TopMost = true`).
+     * Cuenta regresiva visible segundo a segundo con temporizador numérico prominente.
+     * Reproducción de imágenes o GIFs animados demostrativos.
+     * Instrucciones paso a paso del ejercicio en curso.
+     * Barra de progreso del ejercicio y barra de progreso de la rutina general.
+     * Transición automática al siguiente ejercicio al llegar el tiempo a 00:00.
+     * Botón condicional de "Posponer" y botón para "Omitir" o finalizar.
+     * Registro automático en la base de datos con el tiempo exacto ejecutado y su estado (`COMPLETADA`, `POSPUESTA` u `OMITIDA`).
+
+---
+
+### ESTRUCTURA REQUERIDA PARA EL MANUAL
+
+Genera el documento en formato Markdown profesional con la siguiente estructura:
+
+1. **PORTADA Y FICHA TÉCNICA DEL SISTEMA**
+   - Título, Versión del documento, Fecha, Requisitos mínimos del sistema (Windows 10/11, .NET 8 Desktop Runtime, conectividad a BD).
+2. **INTRODUCCIÓN Y OBJETIVOS**
+   - Propósito del manual y beneficios de las pausas activas para la salud ocupacional.
+3. **INICIO DE SESIÓN Y PRIMEROS PASOS**
+   - Explicación de la pantalla de Login, manejo de errores de credenciales y cuentas inactivas.
+4. **GUÍA DEL EMPLEADO (PASO A PASO)**
+   - ¿Qué sucede al iniciar sesión? (Explicación del ícono en la bandeja del sistema).
+   - Uso del menú contextual y consulta del tiempo restante.
+   - Cómo realizar la Pausa Activa cuando aparece la ventana emergente:
+     * Lectura de instrucciones y visualización de GIFs/imágenes.
+     * Temporizador y transición automática.
+     * ¿Cuándo y cómo posponer una pausa?
+     * ¿Qué ocurre si se omite la pausa?
+   - Cerrar sesión y salida correcta de la aplicación.
+5. **GUÍA DEL ADMINISTRADOR (PASO A PASO)**
+   - Navegación general por el Panel Maestro.
+   - Gestión del Catálogo de Ejercicios (cómo dar de alta un ejercicio, recomendaciones para subir GIFs/imágenes, edición y bajas).
+   - Configuración de Pausas Activas y Diseño de Rutinas (cómo programar horarios de oficina, intervalos de descanso y ordenar la secuencia de ejercicios).
+   - Gestión de Cuentas de Empleados (altas, edición de perfiles, restablecimiento de contraseñas olvidadas y desactivación de cuentas).
+   - Módulo de Reportes y Cumplimiento (cómo interpretar las tarjetas de métricas, aplicar filtros y exportar reportes a Excel/CSV para auditorías de SST).
+6. **PREGUNTAS FRECUENTES Y SOLUCIÓN DE PROBLEMAS (TROUBLESHOOTING)**
+   - Tabla clara con: Problema / Causa probable / Solución recomendada.
+   - Ejemplos: "No me aparece la ventana de pausa", "Mi cuenta aparece desactivada", "La pausa no avanza fuera de horario laboral", etc.
+7. **GLOSARIO DE TÉRMINOS**
+
+---
+
+### PAUTAS DE ESTILO Y PRESENTACIÓN
+
+* Emplea un tono corporativo, claro, empático y estructurado.
+* Usa listas numeradas para secuencias paso a paso y viñetas para características.
+* Incorpora cuadros de texto destacados utilizando la sintaxis de alertas de Markdown:
+  - `> [!NOTE]` para aclaraciones y contexto.
+  - `> [!TIP]` para buenas prácticas y recomendaciones de ergonomía/salud.
+  - `> [!IMPORTANT]` para advertencias críticas del sistema.
+* Incluye marcadores visuales simulando capturas de pantalla, por ejemplo:
+  `[Captura de pantalla sugerida: Pantalla de inicio de sesión con campos de usuario y contraseña]`
+  `[Captura de pantalla sugerida: Ventana emergente de Pausa Activa mostrando temporizador y GIF animado]`
+* El manual debe ser auto-contenido y exhaustivo, listo para ser entregado a una empresa.
