@@ -147,7 +147,7 @@ namespace PausasActivasApp.Formularios.Admin
                 CargarParametros(cfg);
                 CargarRutina(cfg.IdConfig);
                 ActualizarBotonesConfig();
-                lblTituloParametros.Text = $"Parámetros — Config #{cfg.IdConfig}";
+                grpParametros.Text = $"Parámetros — Config #{cfg.IdConfig}";
             }
         }
 
@@ -160,7 +160,7 @@ namespace PausasActivasApp.Formularios.Admin
             _configSeleccionada = null;
             _modoNuevo = true;
             LimpiarFormulario();
-            lblTituloParametros.Text = "Nueva Configuración";
+            grpParametros.Text = "Parámetros — Nueva Configuración";
             panelParametros.Enabled = true;
             lstDisponibles.Items.Clear();
             lstRutina.Items.Clear();
@@ -347,7 +347,7 @@ namespace PausasActivasApp.Formularios.Admin
             nudMinutosPosponer.Value    = 10;
             nudMinutosPosponer.Enabled  = true;
             panelParametros.Enabled     = false;
-            lblTituloParametros.Text    = "Selecciona una configuración";
+            grpParametros.Text          = "Parámetros (Selecciona una config)";
         }
 
         private bool ValidarParametros()
