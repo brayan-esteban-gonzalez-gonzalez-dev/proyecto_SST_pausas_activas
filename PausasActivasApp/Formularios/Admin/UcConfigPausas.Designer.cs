@@ -149,10 +149,10 @@ namespace PausasActivasApp.Formularios.Admin
             this.grpParametros.Text     = "Parámetros";
             this.grpParametros.Controls.Add(this.panelParametros);
 
-            this.panelParametros.Dock    = System.Windows.Forms.DockStyle.Fill;
-            this.panelParametros.Enabled = false;
-            this.panelParametros.Name    = "panelParametros";
-            this.panelParametros.Padding = new System.Windows.Forms.Padding(10, 5, 10, 5);
+            this.panelParametros.Location = new System.Drawing.Point(8, 22);
+            this.panelParametros.Size     = new System.Drawing.Size(444, 210);
+            this.panelParametros.Enabled  = false;
+            this.panelParametros.Name     = "panelParametros";
             this.panelParametros.Controls.Add(this.lblTituloParametros);
             this.panelParametros.Controls.Add(this.lblIntervalo);
             this.panelParametros.Controls.Add(this.nudIntervalo);
@@ -167,78 +167,111 @@ namespace PausasActivasApp.Formularios.Admin
             this.panelParametros.Controls.Add(this.lblMinPosLabel);
             this.panelParametros.Controls.Add(this.btnGuardarConfig);
 
-            // Helper para labels del formulario de parámetros
-            System.Action<System.Windows.Forms.Label, string, int, int> cfgLbl =
-                (l, t, x, y) => { l.Font = new System.Drawing.Font("Segoe UI", 9F);
-                    l.Location = new System.Drawing.Point(x, y); l.Size = new System.Drawing.Size(140, 20); l.Text = t; };
-
-            cfgLbl(this.lblTituloParametros, "Selecciona una config", 10, 8);
-            this.lblTituloParametros.Font      = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            // lblTituloParametros
+            this.lblTituloParametros.Font      = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
             this.lblTituloParametros.ForeColor = System.Drawing.Color.FromArgb(0, 86, 130);
-            this.lblTituloParametros.Size      = new System.Drawing.Size(420, 20);
+            this.lblTituloParametros.Location  = new System.Drawing.Point(10, 4);
             this.lblTituloParametros.Name      = "lblTituloParametros";
+            this.lblTituloParametros.Size      = new System.Drawing.Size(425, 22);
+            this.lblTituloParametros.Text      = "Selecciona una configuración";
 
-            cfgLbl(this.lblIntervalo,  "Intervalo de pausa:",   10, 36);  this.lblIntervalo.Name  = "lblIntervalo";
-            cfgLbl(this.lblHoraInicio, "Hora de inicio:",        10, 76);  this.lblHoraInicio.Name = "lblHoraInicio";
-            cfgLbl(this.lblHoraFin,    "Hora de fin:",           10, 116); this.lblHoraFin.Name    = "lblHoraFin";
+            // lblIntervalo
+            this.lblIntervalo.Font     = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblIntervalo.Location = new System.Drawing.Point(10, 32);
+            this.lblIntervalo.Name     = "lblIntervalo";
+            this.lblIntervalo.Size     = new System.Drawing.Size(130, 20);
+            this.lblIntervalo.Text     = "Intervalo de pausa:";
 
             // nudIntervalo
             this.nudIntervalo.Font     = new System.Drawing.Font("Segoe UI", 10F);
-            this.nudIntervalo.Location = new System.Drawing.Point(155, 33);
-            this.nudIntervalo.Maximum  = 480; this.nudIntervalo.Minimum = 1; this.nudIntervalo.Value = 60;
-            this.nudIntervalo.Name     = "nudIntervalo"; this.nudIntervalo.Size = new System.Drawing.Size(80, 25);
+            this.nudIntervalo.Location = new System.Drawing.Point(145, 29);
+            this.nudIntervalo.Maximum  = 480;
+            this.nudIntervalo.Minimum  = 1;
+            this.nudIntervalo.Name     = "nudIntervalo";
+            this.nudIntervalo.Size     = new System.Drawing.Size(75, 25);
+            this.nudIntervalo.Value    = 60;
 
-            this.lblMinutos.Font = new System.Drawing.Font("Segoe UI", 9F);
+            // lblMinutos
+            this.lblMinutos.Font      = new System.Drawing.Font("Segoe UI", 9F);
             this.lblMinutos.ForeColor = System.Drawing.Color.Gray;
-            this.lblMinutos.Location = new System.Drawing.Point(242, 36); this.lblMinutos.Size = new System.Drawing.Size(60, 20);
-            this.lblMinutos.Text = "minutos"; this.lblMinutos.Name = "lblMinutos";
+            this.lblMinutos.Location  = new System.Drawing.Point(225, 32);
+            this.lblMinutos.Name      = "lblMinutos";
+            this.lblMinutos.Size      = new System.Drawing.Size(60, 20);
+            this.lblMinutos.Text      = "minutos";
+
+            // lblHoraInicio
+            this.lblHoraInicio.Font     = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblHoraInicio.Location = new System.Drawing.Point(10, 66);
+            this.lblHoraInicio.Name     = "lblHoraInicio";
+            this.lblHoraInicio.Size     = new System.Drawing.Size(130, 20);
+            this.lblHoraInicio.Text     = "Hora de inicio:";
 
             // dtpHoraInicio
-            this.dtpHoraInicio.Format     = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtpHoraInicio.ShowUpDown = true;
             this.dtpHoraInicio.Font       = new System.Drawing.Font("Segoe UI", 10F);
-            this.dtpHoraInicio.Location   = new System.Drawing.Point(155, 73);
-            this.dtpHoraInicio.Name       = "dtpHoraInicio"; this.dtpHoraInicio.Size = new System.Drawing.Size(90, 25);
+            this.dtpHoraInicio.Format     = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dtpHoraInicio.Location   = new System.Drawing.Point(145, 63);
+            this.dtpHoraInicio.Name       = "dtpHoraInicio";
+            this.dtpHoraInicio.ShowUpDown = true;
+            this.dtpHoraInicio.Size       = new System.Drawing.Size(95, 25);
+
+            // lblHoraFin
+            this.lblHoraFin.Font     = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblHoraFin.Location = new System.Drawing.Point(10, 100);
+            this.lblHoraFin.Name     = "lblHoraFin";
+            this.lblHoraFin.Size     = new System.Drawing.Size(130, 20);
+            this.lblHoraFin.Text     = "Hora de fin:";
 
             // dtpHoraFin
-            this.dtpHoraFin.Format     = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtpHoraFin.ShowUpDown = true;
             this.dtpHoraFin.Font       = new System.Drawing.Font("Segoe UI", 10F);
-            this.dtpHoraFin.Location   = new System.Drawing.Point(155, 113);
-            this.dtpHoraFin.Name       = "dtpHoraFin"; this.dtpHoraFin.Size = new System.Drawing.Size(90, 25);
+            this.dtpHoraFin.Format     = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dtpHoraFin.Location   = new System.Drawing.Point(145, 97);
+            this.dtpHoraFin.Name       = "dtpHoraFin";
+            this.dtpHoraFin.ShowUpDown = true;
+            this.dtpHoraFin.Size       = new System.Drawing.Size(95, 25);
 
             // chkPermitirPosponer
-            this.chkPermitirPosponer.Font     = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.chkPermitirPosponer.Location = new System.Drawing.Point(10, 150);
-            this.chkPermitirPosponer.Name     = "chkPermitirPosponer";
-            this.chkPermitirPosponer.Size     = new System.Drawing.Size(200, 22);
-            this.chkPermitirPosponer.Text     = "Permitir posponer pausa";
+            this.chkPermitirPosponer.Font      = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.chkPermitirPosponer.Location  = new System.Drawing.Point(10, 134);
+            this.chkPermitirPosponer.Name      = "chkPermitirPosponer";
+            this.chkPermitirPosponer.Size      = new System.Drawing.Size(210, 22);
+            this.chkPermitirPosponer.Text      = "Permitir posponer pausa";
             this.chkPermitirPosponer.CheckedChanged += new System.EventHandler(this.chkPermitirPosponer_CheckedChanged);
 
-            cfgLbl(this.lblMinutosPosponer, "Minutos a posponer:", 10, 182); this.lblMinutosPosponer.Name = "lblMinutosPosponer";
+            // lblMinutosPosponer
+            this.lblMinutosPosponer.Font     = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblMinutosPosponer.Location = new System.Drawing.Point(10, 168);
+            this.lblMinutosPosponer.Name     = "lblMinutosPosponer";
+            this.lblMinutosPosponer.Size     = new System.Drawing.Size(130, 20);
+            this.lblMinutosPosponer.Text     = "Minutos a posponer:";
 
             // nudMinutosPosponer
             this.nudMinutosPosponer.Font     = new System.Drawing.Font("Segoe UI", 10F);
-            this.nudMinutosPosponer.Location = new System.Drawing.Point(155, 179);
-            this.nudMinutosPosponer.Maximum  = 60; this.nudMinutosPosponer.Minimum = 1; this.nudMinutosPosponer.Value = 10;
-            this.nudMinutosPosponer.Name     = "nudMinutosPosponer"; this.nudMinutosPosponer.Size = new System.Drawing.Size(80, 25);
+            this.nudMinutosPosponer.Location = new System.Drawing.Point(145, 165);
+            this.nudMinutosPosponer.Maximum  = 60;
+            this.nudMinutosPosponer.Minimum  = 1;
+            this.nudMinutosPosponer.Name     = "nudMinutosPosponer";
+            this.nudMinutosPosponer.Size     = new System.Drawing.Size(75, 25);
+            this.nudMinutosPosponer.Value    = 10;
 
-            this.lblMinPosLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            // lblMinPosLabel
+            this.lblMinPosLabel.Font      = new System.Drawing.Font("Segoe UI", 9F);
             this.lblMinPosLabel.ForeColor = System.Drawing.Color.Gray;
-            this.lblMinPosLabel.Location = new System.Drawing.Point(242, 182); this.lblMinPosLabel.Size = new System.Drawing.Size(60, 20);
-            this.lblMinPosLabel.Text = "minutos"; this.lblMinPosLabel.Name = "lblMinPosLabel";
+            this.lblMinPosLabel.Location  = new System.Drawing.Point(225, 168);
+            this.lblMinPosLabel.Name      = "lblMinPosLabel";
+            this.lblMinPosLabel.Size      = new System.Drawing.Size(60, 20);
+            this.lblMinPosLabel.Text      = "minutos";
 
             // btnGuardarConfig
             this.btnGuardarConfig.BackColor = System.Drawing.Color.FromArgb(0, 140, 70);
-            this.btnGuardarConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGuardarConfig.Cursor    = System.Windows.Forms.Cursors.Hand;
             this.btnGuardarConfig.FlatAppearance.BorderSize = 0;
+            this.btnGuardarConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGuardarConfig.Font      = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnGuardarConfig.ForeColor = System.Drawing.Color.White;
-            this.btnGuardarConfig.Location  = new System.Drawing.Point(260, 205);
+            this.btnGuardarConfig.Location  = new System.Drawing.Point(235, 160);
             this.btnGuardarConfig.Name      = "btnGuardarConfig";
-            this.btnGuardarConfig.Size      = new System.Drawing.Size(185, 32);
-            this.btnGuardarConfig.Text      = "💾 Guardar configuración";
-            this.btnGuardarConfig.Cursor    = System.Windows.Forms.Cursors.Hand;
+            this.btnGuardarConfig.Size      = new System.Drawing.Size(198, 36);
+            this.btnGuardarConfig.Text      = "💾 Guardar cambios";
             this.btnGuardarConfig.Click    += new System.EventHandler(this.btnGuardarConfig_Click);
 
             // ════════════════════════════════════════════════════════════════
@@ -335,6 +368,7 @@ namespace PausasActivasApp.Formularios.Admin
             // ── UcConfigPausas ──────────────────────────────────────────────
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode       = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll          = true;
             this.Controls.Add(this.lblModuloTitulo);
             this.Controls.Add(this.separadorTop);
             this.Controls.Add(this.grpConfigs);

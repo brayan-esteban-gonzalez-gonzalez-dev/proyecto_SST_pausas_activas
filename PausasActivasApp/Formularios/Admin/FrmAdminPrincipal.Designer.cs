@@ -126,18 +126,19 @@ namespace PausasActivasApp.Formularios.Admin
             this.btnCerrarSesion.Click    += new System.EventHandler(this.btnCerrarSesion_Click);
 
             // ── panelContenido ──────────────────────────────────────────────
-            this.panelContenido.BackColor = System.Drawing.SystemColors.Control;
-            this.panelContenido.Dock      = System.Windows.Forms.DockStyle.Fill;
-            this.panelContenido.Name      = "panelContenido";
-            this.panelContenido.Padding   = new System.Windows.Forms.Padding(10);
+            this.panelContenido.AutoScroll = true;
+            this.panelContenido.BackColor  = System.Drawing.SystemColors.Control;
+            this.panelContenido.Dock       = System.Windows.Forms.DockStyle.Fill;
+            this.panelContenido.Name       = "panelContenido";
+            this.panelContenido.Padding    = new System.Windows.Forms.Padding(10);
 
             // ── FrmAdminPrincipal ───────────────────────────────────────────
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode       = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize          = new System.Drawing.Size(1000, 600);
+            this.ClientSize          = new System.Drawing.Size(1180, 680);
             this.Controls.Add(this.panelContenido);
             this.Controls.Add(this.panelSidebar);
-            this.MinimumSize         = new System.Drawing.Size(850, 520);
+            this.MinimumSize         = new System.Drawing.Size(1000, 600);
             this.Name                = "FrmAdminPrincipal";
             this.StartPosition       = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text                = "PausasActivasApp — Panel Administrador";
