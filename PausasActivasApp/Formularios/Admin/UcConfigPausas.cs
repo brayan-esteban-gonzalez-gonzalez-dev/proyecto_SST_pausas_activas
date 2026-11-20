@@ -17,6 +17,7 @@ namespace PausasActivasApp.Formularios.Admin
     {
         private ConfiguracionPausa? _configSeleccionada;
         private bool _modoNuevo = false;
+        private bool _ignorarCambioSeleccion = false;
 
         public UcConfigPausas()
         {
@@ -56,9 +57,30 @@ namespace PausasActivasApp.Formularios.Admin
             try
             {
                 var lista = PausaDAL.ObtenerTodas();
+                _ignorarCambioSeleccion = true;
+                dgvConfiguraciones.DataSource = null;
                 dgvConfiguraciones.DataSource = lista;
+                _ignorarCambioSeleccion = false;
+
+                if (lista.Count > 0)
+                {
+                    dgvConfiguraciones.Rows[0].Selected = true;
+                    if (dgvConfiguraciones.Rows[0].DataBoundItem is ConfiguracionPausa cfg)
+                    {
+                        _configSeleccionada = cfg;
+                        _modoNuevo = false;
+                        CargarParametros(cfg);
+                        CargarRutina(cfg.IdConfig);
+                        grpParametros.Text = $"Parámetros — Config #{cfg.IdConfig}";
+                    }
+                }
+                else
+                {
+                    _configSeleccionada = null;
+                    LimpiarFormulario();
+                }
+
                 ActualizarBotonesConfig();
-                LimpiarFormulario();
             }
             catch (Exception ex)
             {
@@ -140,6 +162,8 @@ namespace PausasActivasApp.Formularios.Admin
 
         private void dgvConfiguraciones_SelectionChanged(object sender, EventArgs e)
         {
+            if (_ignorarCambioSeleccion) return;
+
             if (dgvConfiguraciones.CurrentRow?.DataBoundItem is ConfiguracionPausa cfg)
             {
                 _configSeleccionada = cfg;
@@ -157,15 +181,36 @@ namespace PausasActivasApp.Formularios.Admin
 
         private void btnNuevaConfig_Click(object sender, EventArgs e)
         {
-            _configSeleccionada = null;
-            _modoNuevo = true;
-            LimpiarFormulario();
-            grpParametros.Text = "Parámetros — Nueva Configuración";
-            panelParametros.Enabled = true;
-            lstDisponibles.Items.Clear();
-            lstRutina.Items.Clear();
-            CargarEjerciciosDisponibles();
-            lblDuracionTotal.Text = "Duración total: 0 seg";
+            _ignorarCambioSeleccion = true;
+            try
+            {
+                _configSeleccionada = null;
+                _modoNuevo = true;
+
+                // Deseleccionar cualquier fila en la grilla
+                dgvConfiguraciones.ClearSelection();
+                if (dgvConfiguraciones.CurrentCell != null)
+                    dgvConfiguraciones.CurrentCell = null;
+
+                // Limpiar campos de texto / parámetros para nueva configuración
+                LimpiarFormularioParaNuevo();
+
+                grpParametros.Text = "Parámetros — Nueva Configuración";
+                panelParametros.Enabled = true;
+
+                // Limpiar rutina y recargar ejercicios disponibles
+                lstDisponibles.Items.Clear();
+                lstRutina.Items.Clear();
+                CargarEjerciciosDisponibles();
+                ActualizarDuracionTotal();
+
+                ActualizarBotonesConfig();
+                nudIntervalo.Focus();
+            }
+            finally
+            {
+                _ignorarCambioSeleccion = false;
+            }
         }
 
         private void btnActivarConfig_Click(object sender, EventArgs e)
@@ -233,7 +278,7 @@ namespace PausasActivasApp.Formularios.Admin
                     HoraInicio        = dtpHoraInicio.Value.TimeOfDay,
                     HoraFin           = dtpHoraFin.Value.TimeOfDay,
                     PermitirPosponer  = chkPermitirPosponer.Checked,
-                    MinutosPosponer   = (int)nudMinutosPosponer.Value
+                    MinutosPosponer   = chkPermitirPosponer.Checked ? (int)nudMinutosPosponer.Value : 5
                 };
 
                 if (_modoNuevo)
@@ -320,6 +365,10 @@ namespace PausasActivasApp.Formularios.Admin
         {
             nudMinutosPosponer.Enabled = chkPermitirPosponer.Checked;
             lblMinutosPosponer.Enabled = chkPermitirPosponer.Checked;
+            if (chkPermitirPosponer.Checked && string.IsNullOrWhiteSpace(nudMinutosPosponer.Text))
+            {
+                nudMinutosPosponer.Text = "5";
+            }
         }
 
         // ════════════════════════════════════════════════════════════════════
@@ -328,36 +377,72 @@ namespace PausasActivasApp.Formularios.Admin
 
         private void CargarParametros(ConfiguracionPausa cfg)
         {
-            nudIntervalo.Value         = cfg.IntervaloMinutos;
-            dtpHoraInicio.Value        = DateTime.Today.Add(cfg.HoraInicio);
-            dtpHoraFin.Value           = DateTime.Today.Add(cfg.HoraFin);
+            nudIntervalo.Value          = cfg.IntervaloMinutos;
+            nudIntervalo.Text           = cfg.IntervaloMinutos.ToString();
+            dtpHoraInicio.Value         = DateTime.Today.Add(cfg.HoraInicio);
+            dtpHoraFin.Value            = DateTime.Today.Add(cfg.HoraFin);
             chkPermitirPosponer.Checked = cfg.PermitirPosponer;
-            nudMinutosPosponer.Value   = cfg.MinutosPosponer;
-            nudMinutosPosponer.Enabled = cfg.PermitirPosponer;
-            lblMinutosPosponer.Enabled = cfg.PermitirPosponer;
-            panelParametros.Enabled    = true;
+            nudMinutosPosponer.Value    = cfg.MinutosPosponer > 0 ? cfg.MinutosPosponer : 5;
+            nudMinutosPosponer.Text     = cfg.MinutosPosponer > 0 ? cfg.MinutosPosponer.ToString() : (cfg.PermitirPosponer ? "5" : string.Empty);
+            nudMinutosPosponer.Enabled  = cfg.PermitirPosponer;
+            lblMinutosPosponer.Enabled  = cfg.PermitirPosponer;
+            panelParametros.Enabled     = true;
         }
 
         private void LimpiarFormulario()
         {
-            nudIntervalo.Value          = 60;
+            nudIntervalo.Text           = string.Empty;
             dtpHoraInicio.Value         = DateTime.Today.Add(new TimeSpan(8, 0, 0));
             dtpHoraFin.Value            = DateTime.Today.Add(new TimeSpan(17, 0, 0));
-            chkPermitirPosponer.Checked = true;
-            nudMinutosPosponer.Value    = 10;
-            nudMinutosPosponer.Enabled  = true;
+            chkPermitirPosponer.Checked = false;
+            nudMinutosPosponer.Text     = string.Empty;
+            nudMinutosPosponer.Enabled  = false;
+            lblMinutosPosponer.Enabled  = false;
             panelParametros.Enabled     = false;
             grpParametros.Text          = "Parámetros (Selecciona una config)";
         }
 
+        private void LimpiarFormularioParaNuevo()
+        {
+            nudIntervalo.Text           = string.Empty;
+            dtpHoraInicio.Value         = DateTime.Today.AddHours(8);
+            dtpHoraFin.Value            = DateTime.Today.AddHours(17);
+            chkPermitirPosponer.Checked = false;
+            nudMinutosPosponer.Text     = string.Empty;
+            nudMinutosPosponer.Enabled  = false;
+            lblMinutosPosponer.Enabled  = false;
+        }
+
         private bool ValidarParametros()
         {
+            if (string.IsNullOrWhiteSpace(nudIntervalo.Text) || !int.TryParse(nudIntervalo.Text.Trim(), out int intervalo) || intervalo < 1 || intervalo > 480)
+            {
+                MessageBox.Show("Por favor, ingresa un intervalo de pausa válido (entre 1 y 480 minutos).",
+                    "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                nudIntervalo.Focus();
+                return false;
+            }
+            nudIntervalo.Value = intervalo;
+
             if (dtpHoraInicio.Value.TimeOfDay >= dtpHoraFin.Value.TimeOfDay)
             {
                 MessageBox.Show("La hora de inicio debe ser anterior a la hora de fin.",
                     "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
+
+            if (chkPermitirPosponer.Checked)
+            {
+                if (string.IsNullOrWhiteSpace(nudMinutosPosponer.Text) || !int.TryParse(nudMinutosPosponer.Text.Trim(), out int minPosponer) || minPosponer < 1 || minPosponer > 60)
+                {
+                    MessageBox.Show("Por favor, ingresa los minutos a posponer válidos (entre 1 y 60).",
+                        "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    nudMinutosPosponer.Focus();
+                    return false;
+                }
+                nudMinutosPosponer.Value = minPosponer;
+            }
+
             return true;
         }
 
